@@ -28,3 +28,6 @@ venv/
 ENV/
 .DS_Store
 Thumbs.db
+
+DigitalCanteen-master/
+*.docx
