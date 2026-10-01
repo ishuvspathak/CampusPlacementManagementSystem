@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placement Officer (TPO) Dashboard | CIT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0b0f19;
+            --card-bg: #111827;
+            --card-border: #1f2937;
+            --accent-blue: #3b82f6;
+            --accent-teal: #10b981;
+            --accent-yellow: #f59e0b;
+            --accent-red: #ef4444;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        nav {
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--card-border);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid var(--card-border);
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: var(--card-border);
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            flex: 1;
+        }
+
+        /* Review info */
+        .eval-banner {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .eval-title {
+            font-weight: 700;
+            color: #93c5fd;
+        }
+
+        .eval-sub {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 1.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .stat-val {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        /* Table Card */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(31, 41, 55, 0.6);
+            color: #e5e7eb;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-Applied { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .status-Shortlisted { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .status-Selected { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .status-InterviewScheduled { background: rgba(139, 92, 246, 0.15); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.3); }
+        .status-Rejected { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .select-status {
+            background: #1f2937;
+            color: #fff;
+            border: 1px solid #374151;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            outline: none;
+            cursor: pointer;
+        }
+
+        footer {
+            background: #090d15;
+            border-top: 1px solid var(--card-border);
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="brand-container">
+            <span class="brand-badge">TPO ADMIN</span>
+            <div>
+                <div style="font-weight: 700; font-size: 1.1rem;">Training & Placement Officer Portal</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Coimbatore Institute of Technology &bull; Placement Cell</div>
+            </div>
+        </div>
+        <div class="nav-links">
+            <a href="/" class="nav-btn">View Student Portal</a>
+            <a href="/health" target="_blank" class="nav-btn">System Health</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Review Faculty Details -->
+        <div class="eval-banner">
+            <div>
+                <div class="eval-title">23IT723 - DevOps Laboratory | Final Mini Project Assessment</div>
+                <div class="eval-sub">Project: <strong>Campus Placement Management System</strong> &bull; Candidate: <strong>Ishu Pathak (2303717620521021)</strong></div>
+            </div>
+            <div style="font-size: 0.85rem; color: #cbd5e1; text-align: right;">
+                <div><strong>Review Members:</strong></div>
+                <div>1. Dr. M. Sangeetha &bull; 2. Dr. E. Arul</div>
+            </div>
+        </div>
+
+        <!-- Metric KPI Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Applications</div>
+                <div class="stat-val" style="color: #60a5fa;">{{ stats.total }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Shortlisted Candidates</div>
+                <div class="stat-val" style="color: #fbbf24;">{{ stats.shortlisted }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Final Offers Selected</div>
+                <div class="stat-val" style="color: #34d399;">{{ stats.selected }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Active Placement Drives</div>
+                <div class="stat-val" style="color: #c084fc;">{{ stats.drives_count }}</div>
+            </div>
+        </div>
+
+        <!-- Student Applications Table -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Registered Student Applications & Screening</h2>
+                <span style="font-size: 0.85rem; color: var(--text-muted);">Live database records (/app/data/placement.db)</span>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>App ID</th>
+                        <th>Student Name</th>
+                        <th>Register No</th>
+                        <th>Company & Role</th>
+                        <th>CGPA</th>
+                        <th>Contact</th>
+                        <th>Current Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                    <tr>
+                        <td><strong>#{{ app['id'] }}</strong></td>
+                        <td style="font-weight: 600;">{{ app['student_name'] }}</td>
+                        <td style="font-family: monospace; color: #93c5fd;">{{ app['roll_no'] }}</td>
+                        <td>
+                            <div>{{ app['company'] }}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">{{ app['role'] }}</div>
+                        </td>
+                        <td><span style="font-weight: 700;">{{ app['cgpa'] }}</span></td>
+                        <td>
+                            <div style="font-size: 0.8rem;">{{ app['email'] }}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">{{ app['phone'] }}</div>
+                        </td>
+                        <td>
+                            <span class="status-badge status-{{ app['status'].replace(' ', '') }}">
+                                {{ app['status'] }}
+                            </span>
+                        </td>
+                        <td>
+                            <select class="select-status" onchange="changeStatus('{{ app['id'] }}', this.value)">
+                                <option value="" disabled selected>Change Status</option>
+                                <option value="Applied">Applied</option>
+                                <option value="Shortlisted">Shortlisted</option>
+                                <option value="Interview Scheduled">Interview Scheduled</option>
+                                <option value="Selected">Selected</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        <div>Coimbatore Institute of Technology &bull; Autonomous Institution Affiliated to Anna University</div>
+        <div style="margin-top: 4px; font-size: 0.8rem;">DevOps CI/CD Integrated Dashboard &bull; Dockerized with Persistent SQLite Storage</div>
+    </footer>
+
+    <script>
+        async function changeStatus(appId, newStatus) {
+            try {
+                const response = await fetch('/api/status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ application_id: appId, status: newStatus })
+                });
+                const res = await response.json();
+                if (res.success) {
+                    location.reload();
+                } else {
+                    alert('Error updating status: ' + res.message);
+                }
+            } catch (err) {
+                alert('Request failed: ' + err);
+            }
+        }
+    </script>
+</body>
+</html>
