@@ -1,0 +1,13 @@
+---
+- hosts: dockerhost
+  tasks:
+    - name: Manage Placement System Container
+      community.docker.docker_container:
+        name: placement-system-ansible
+        image: placement-system-ci
+        state: "{{ container_state | default('started') }}"
+        restart_policy: unless-stopped
+        published_ports:
+          - "5001:5000"
+        volumes:
+          - "placement_data:/app/data"
