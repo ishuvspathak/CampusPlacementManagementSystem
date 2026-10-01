@@ -18,7 +18,7 @@ def add_header_footer(doc):
         section.left_margin = Inches(0.9)
         section.right_margin = Inches(0.9)
         
-        # Header: empty or minimal
+        # Header
         header = section.header
         hp = header.paragraphs[0]
         hp.alignment = WD_ALIGN_PARAGRAPH.RIGHT
@@ -42,8 +42,8 @@ def add_header_footer(doc):
 
 def add_heading_1(doc, text):
     p = doc.add_paragraph()
-    p.paragraph_format.space_before = Pt(14)
-    p.paragraph_format.space_after = Pt(6)
+    p.paragraph_format.space_before = Pt(12)
+    p.paragraph_format.space_after = Pt(5)
     p.paragraph_format.keep_with_next = True
     run = p.add_run(text)
     run.font.name = "Times New Roman"
@@ -54,8 +54,8 @@ def add_heading_1(doc, text):
 
 def add_subheading(doc, text):
     p = doc.add_paragraph()
-    p.paragraph_format.space_before = Pt(8)
-    p.paragraph_format.space_after = Pt(3)
+    p.paragraph_format.space_before = Pt(7)
+    p.paragraph_format.space_after = Pt(2)
     p.paragraph_format.keep_with_next = True
     run = p.add_run(text)
     run.font.name = "Times New Roman"
@@ -66,27 +66,64 @@ def add_subheading(doc, text):
 def add_body_paragraph(doc, text):
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-    p.paragraph_format.space_after = Pt(6)
+    p.paragraph_format.space_after = Pt(5)
     p.paragraph_format.line_spacing = 1.15
     run = p.add_run(text)
     run.font.name = "Times New Roman"
     run.font.size = Pt(11)
     return p
 
+def add_cmd_label(doc, text):
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.paragraph_format.space_before = Pt(5)
+    p.paragraph_format.space_after = Pt(1)
+    p.paragraph_format.line_spacing = 1.1
+    run = p.add_run(text)
+    run.font.name = "Times New Roman"
+    run.font.size = Pt(11)
+    return p
+
+def add_cmd_code(doc, text):
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.paragraph_format.space_before = Pt(1)
+    p.paragraph_format.space_after = Pt(4)
+    p.paragraph_format.line_spacing = 1.1
+    run = p.add_run(text)
+    run.font.name = "Consolas"
+    run.font.size = Pt(10)
+    run.font.bold = True
+    run.font.color.rgb = RGBColor(30, 41, 59)
+    return p
+
 def add_bullet_point(doc, text):
     p = doc.add_paragraph(style='List Bullet')
-    p.paragraph_format.space_after = Pt(2.5)
+    p.paragraph_format.space_before = Pt(1)
+    p.paragraph_format.space_after = Pt(2)
+    p.paragraph_format.line_spacing = 1.12
+    p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    run = p.add_run(text)
+    run.font.name = "Times New Roman"
+    run.font.size = Pt(10.5)
+    return p
+
+def add_numbered_item(doc, text):
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.paragraph_format.space_before = Pt(1)
+    p.paragraph_format.space_after = Pt(2)
     p.paragraph_format.line_spacing = 1.12
     run = p.add_run(text)
     run.font.name = "Times New Roman"
     run.font.size = Pt(10.5)
     return p
 
-def add_image_figure(doc, img_path, caption_text, width=Inches(5.5)):
+def add_image_figure(doc, img_path, caption_text, width=Inches(5.4)):
     if os.path.exists(img_path):
         p_img = doc.add_paragraph()
         p_img.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        p_img.paragraph_format.space_before = Pt(6)
+        p_img.paragraph_format.space_before = Pt(5)
         p_img.paragraph_format.space_after = Pt(3)
         run_img = p_img.add_run()
         run_img.add_picture(img_path, width=width)
@@ -94,7 +131,7 @@ def add_image_figure(doc, img_path, caption_text, width=Inches(5.5)):
         p_cap = doc.add_paragraph()
         p_cap.alignment = WD_ALIGN_PARAGRAPH.LEFT
         p_cap.paragraph_format.space_before = Pt(2)
-        p_cap.paragraph_format.space_after = Pt(8)
+        p_cap.paragraph_format.space_after = Pt(6)
         run_cap = p_cap.add_run(caption_text)
         run_cap.font.name = "Times New Roman"
         run_cap.font.size = Pt(10.5)
@@ -439,29 +476,29 @@ def generate_full_document():
         set_cell_background(c, "E2E8F0")
 
     toc_items = [
-        ("1", "INTRODUCTION", "07"),
-        ("2", "OBJECTIVES", "07"),
-        ("3", "ABSTRACT", "08"),
-        ("4", "TECHOLOGY STACK", "08"),
-        ("5", "SYSTEM ARCHITECTURE", "09"),
-        ("6", "MODULE 1 — USER INTERFACE & JOB APPLICATION", "10"),
-        ("7", "MODULE 2 — FLASK BACKEND & DRIVE MANAGEMENT", "11"),
-        ("8", "MODULE 3 — SQLITE DATABASE MANAGEMENT", "12"),
-        ("9", "MODULE 4 — GIT & GITHUB SOURCE CONTROL", "14"),
-        ("10", "MODULE 5 — DOCKER CONTAINERIZATION", "15"),
-        ("11", "MODULE 6 — JENKINS CI/CD PIPELINE", "17"),
-        ("12", "MODULE 7 — AUTOMATED TESTING", "19"),
-        ("13", "MODULE 8 — ANSIBLE DEPLOYMENT", "20"),
-        ("14", "MODULE 9 — PERSISTENT STORAGE", "21"),
-        ("15", "MODULE 10 — ADMIN & PLACEMENT MANAGEMENT", "22"),
-        ("16", "MODULE 11 — CI/CD INTEGRATION", "23"),
-        ("17", "MODULE 12 — APPLICATION & DEPLOYMENT VERIFICATION", "24"),
-        ("18", "RESULTS AND OUTPUT", "26"),
-        ("19", "COMMANDS USED", "26"),
-        ("20", "ADVANTAGES", "31"),
-        ("21", "LIMITATIONS", "31"),
-        ("22", "FUTURE ENHANCEMENTS", "32"),
-        ("23", "CONCLUSION", "32")
+        ("1", "INTRODUCTION", "05"),
+        ("2", "OBJECTIVES", "05"),
+        ("3", "ABSTRACT", "06"),
+        ("4", "TECHOLOGY STACK", "06"),
+        ("5", "SYSTEM ARCHITECTURE", "07"),
+        ("6", "MODULE 1 — USER INTERFACE & JOB APPLICATION", "08"),
+        ("7", "MODULE 2 — FLASK BACKEND & DRIVE MANAGEMENT", "09"),
+        ("8", "MODULE 3 — SQLITE DATABASE MANAGEMENT", "10"),
+        ("9", "MODULE 4 — GIT & GITHUB SOURCE CONTROL", "11"),
+        ("10", "MODULE 5 — DOCKER CONTAINERIZATION", "12"),
+        ("11", "MODULE 6 — JENKINS CI/CD PIPELINE", "14"),
+        ("12", "MODULE 7 — AUTOMATED TESTING", "15"),
+        ("13", "MODULE 8 — ANSIBLE DEPLOYMENT", "17"),
+        ("14", "MODULE 9 — PERSISTENT STORAGE", "18"),
+        ("15", "MODULE 10 — ADMIN & PLACEMENT MANAGEMENT", "19"),
+        ("16", "MODULE 11 — CI/CD INTEGRATION", "20"),
+        ("17", "MODULE 12 — APPLICATION & DEPLOYMENT VERIFICATION", "21"),
+        ("18", "RESULTS AND OUTPUT", "23"),
+        ("19", "COMMANDS USED", "23"),
+        ("20", "ADVANTAGES", "28"),
+        ("21", "LIMITATIONS", "28"),
+        ("22", "FUTURE ENHANCEMENTS", "29"),
+        ("23", "CONCLUSION", "29")
     ]
 
     for item in toc_items:
@@ -483,31 +520,30 @@ def generate_full_document():
     add_heading_1(doc, "1. INTRODUCTION")
     add_body_paragraph(
         doc,
-        "The Campus Placement Management System is a web-based recruitment and student application portal developed to "
-        "simplify and automate the process of campus recruitment in an academic environment. The system allows students to "
-        "browse available campus placement drives, search for job roles, select opportunities based on minimum eligibility cutoffs, "
-        "and submit verified applications through a modern digital interface. An administrative dashboard is also provided for "
-        "Training & Placement Officers (TPO) and faculty coordinators to view and manage candidate submissions. The application is "
-        "developed using HTML, CSS, JavaScript, Python, Flask, and SQLite, with Flask handling backend operations and SQLite storing "
-        "placement and candidate application data. The project also incorporates DevOps practices to automate the development, "
-        "testing, and deployment process. Git and GitHub are used for source code management, while Jenkins automates the CI/CD "
-        "pipeline. Docker provides application containerization, Pytest performs automated testing, and Ansible automates deployment "
-        "and container configuration. A Docker Volume named placement_data is used to provide persistent storage for the SQLite database. "
-        "The project combines a functional campus placement portal with DevOps automation to provide a structured and reliable approach "
+        "The Campus Placement Management System is a web-based placement application and recruitment management "
+        "system developed to simplify the process of campus recruitment drives in an institutional environment. The system allows "
+        "students to browse available company drives, search for job roles, select positions based on eligibility cutoffs, "
+        "and submit applications through a digital interface. An admin dashboard is also provided to view and manage candidate "
+        "applications. The application is developed using HTML, CSS, JavaScript, Python, Flask, and SQLite, with Flask handling "
+        "backend operations and SQLite storing placement information. The project also incorporates DevOps practices to automate "
+        "the development, testing, and deployment process. Git and GitHub are used for source code management, while Jenkins automates "
+        "the CI/CD pipeline. Docker provides application containerization, Pytest performs automated testing, and Ansible automates "
+        "deployment and container configuration. A Docker Volume is used to provide persistent storage for the SQLite database. The "
+        "project combines a functional campus placement system with DevOps automation to provide a structured and reliable approach "
         "to application development and deployment."
     )
 
     add_heading_1(doc, "2. OBJECTIVES")
     objectives = [
-        "To develop a digital placement system that enables students to browse, search, and apply for campus recruitment drives conveniently.",
-        "To implement an admin dashboard for viewing registered candidate submissions and maintaining placement records using SQLite.",
-        "To organize placement drive data systematically and provide quick access to student application details through the admin dashboard.",
+        "To develop a digital placement system that enables students to browse, search, select company drives, and apply conveniently.",
+        "To implement an admin dashboard for viewing placed applications and maintaining candidate records using SQLite.",
+        "To organize placement data systematically and provide quick access to stored applicant details through the admin dashboard.",
         "To implement DevOps practices throughout the application development and deployment process using Git, GitHub, and Jenkins.",
         "To automate the CI/CD workflow using Jenkins for building, testing, and deploying the application.",
         "To containerize the application using Docker to provide a consistent and portable execution environment.",
         "To integrate Pytest for automated testing to verify application functionality and reduce errors before deployment.",
         "To automate application deployment and container configuration using Ansible.",
-        "To implement Docker Volume for persistent storage of the SQLite database and ensure that candidate application records are retained even when the container is recreated."
+        "To implement Docker Volume for persistent storage of the SQLite database and ensure that application information is retained even when the application container is recreated."
     ]
     for obj in objectives:
         add_bullet_point(doc, obj)
@@ -520,20 +556,20 @@ def generate_full_document():
     add_heading_1(doc, "3. ABSTRACT")
     add_body_paragraph(
         doc,
-        "The Campus Placement Management System is a web-based placement application and recruitment portal designed to "
-        "simplify the placement registration process in an institutional environment. Traditional placement operations may involve "
-        "long notice-board delays, manual Google form processing, difficulty in tracking multiple eligibility criteria, and challenges "
-        "in maintaining student application records. The proposed system provides a digital platform where students can browse available "
-        "recruitment drives, search for software roles, select positions based on CGPA cutoffs, and submit applications conveniently. "
-        "An administrative dashboard is also provided for viewing and managing candidate records. The application is developed using "
-        "HTML, CSS, JavaScript, Python, Flask, and SQLite, with Flask handling backend operations and SQLite storing application data. "
+        "The Campus Placement Management System is a web-based recruitment and applicant tracking system designed to "
+        "simplify the process of managing placement drives in a college environment. Traditional placement operations may involve "
+        "long notice-board delays, manual spreadsheet processing, difficulty in managing multiple student applications, and challenges "
+        "in maintaining student records. The proposed system provides a digital platform where students can browse available placement "
+        "drives, search for company roles, select profiles based on CGPA cutoffs, and submit applications conveniently. An administrative "
+        "dashboard is also provided for viewing and managing candidate records. The application is developed using HTML, CSS, "
+        "JavaScript, Python, Flask, and SQLite, with Flask handling backend operations and SQLite storing applicant information. "
         "The project also implements DevOps practices to automate the software development, testing, and deployment process. Git and "
         "GitHub are used for version control and source code management, while Jenkins automates the CI/CD pipeline. Docker is used to "
         "containerize the application and provide a consistent execution environment, Pytest performs automated testing, and Ansible "
-        "automates application deployment and container configuration. A Docker Volume named placement_data is used to provide persistent "
-        "storage for the SQLite database, ensuring that stored applicant information is retained even when the application container is "
-        "recreated. The complete workflow follows GitHub → Jenkins → Docker Build → Pytest → Ansible → Docker Container → Flask → "
-        "SQLite, demonstrating the integration of a functional web application with modern DevOps practices and persistent data management."
+        "automates application deployment and container configuration. A Docker Volume named placement_data is used to provide "
+        "persistent storage for the SQLite database, ensuring that stored applicant information is retained even when the application "
+        "container is recreated. The complete workflow follows GitHub → Jenkins → Docker Build → Pytest → Ansible → Docker Container "
+        "→ Flask → SQLite, demonstrating the integration of a functional web application with modern DevOps practices and persistent data management."
     )
 
     add_heading_1(doc, "4. TECHNOLOGY STACK")
@@ -553,13 +589,13 @@ def generate_full_document():
         ("CSS", "CSS3", "User interface styling"),
         ("JavaScript", "ES6+", "Frontend interaction"),
         ("Python", "3.11", "Backend programming"),
-        ("Flask", "3.1.3", "Backend web framework"),
+        ("Flask", "3.0.0", "Backend web framework"),
         ("SQLite", "3.x", "Database management"),
         ("Git", "2.x", "Version control"),
         ("GitHub", "—", "Source code repository"),
-        ("Jenkins", "2.508.2", "CI/CD automation"),
-        ("Docker", "29.8.1", "Application containerization"),
-        ("Pytest", "9.1.1", "Automated testing"),
+        ("Jenkins", "2.541.3", "CI/CD automation"),
+        ("Docker", "28.5.2", "Application containerization"),
+        ("Pytest", "8.3.5", "Automated testing"),
         ("Ansible", "2.10.8", "Deployment automation"),
         ("Docker SDK / Community Docker", "community.docker 1.2.2", "Docker management through Ansible")
     ]
@@ -580,7 +616,7 @@ def generate_full_document():
     # PAGE 9: 5. SYSTEM ARCHITECTURE
     # =========================================================================
     add_heading_1(doc, "5. SYSTEM ARCHITECTURE")
-    add_image_figure(doc, "screenshots/figures/fig_architecture.png", "Figure: Campus Placement System - End-to-End CI/CD Architecture with Persistent SQLite", width=Inches(5.7))
+    add_image_figure(doc, "screenshots/figures/fig_architecture.png", "Figure: Campus Placement System - Architecture Diagram", width=Inches(5.6))
 
     steps_p9 = [
         "1. Development: Developer creates and updates the Campus Placement Management application.",
@@ -602,8 +638,8 @@ def generate_full_document():
         "7. Deployment Automation: After successful testing, Jenkins invokes Ansible to automate the deployment process.",
         "8. Container Configuration: Ansible creates and configures the Docker container with the required image, port mapping, restart policy, and volume configuration.",
         "9. Application Execution: The Docker container runs the Flask backend, HTML/CSS/JavaScript frontend, and SQLite database.",
-        "10. User Interaction: Students can browse recruitment drives, check cutoffs, and submit applications through the portal.",
-        "11. Admin Management: The TPO admin dashboard allows placement officers to view and monitor registered student records stored in the database."
+        "10. User Interaction: Students can browse recruitment drives, search for roles, check eligibility, and submit applications through the application.",
+        "11. Admin Management: The admin dashboard allows administrators to view and monitor the registered applicant information stored in the database."
     ]
     for s in steps_p10:
         add_body_paragraph(doc, s)
@@ -612,21 +648,21 @@ def generate_full_document():
     add_body_paragraph(
         doc,
         "This module provides the user-facing interface of the Campus Placement Management application. It is designed to "
-        "make company browsing and job application submission simple and convenient for students."
+        "make drive browsing and application submission simple and convenient for students."
     )
     add_subheading(doc, "Main Features")
     mod1_feats = [
-        "Displays available campus recruitment drives with relevant details.",
-        "Provides a search option to find job roles or companies quickly.",
-        "Organizes recruitment drives into different categories (Product, Services).",
-        "Allows users to select individual placement drives.",
-        "Allows student details to be filled in a clean modal dialog.",
-        "Provides application tracking ID generation for submitted profiles.",
-        "Displays the drive details, package CTC, and CGPA cutoffs before submission.",
-        "Allows users to place the final application submission.",
-        "Provides confirmation toast alerts after successful submission.",
-        "Provides a simple and user-friendly interface for accessing campus placement drives.",
-        "Uses responsive interface elements for better usability across all devices.",
+        "Displays available recruitment drives with relevant details.",
+        "Provides a search option to find company roles quickly.",
+        "Organizes placement opportunities into different categories.",
+        "Allows users to select individual recruitment drives.",
+        "Allows student application details to be entered in a modal form.",
+        "Provides registration management for selected placement drives.",
+        "Displays the drive details, CGPA cutoffs, and package information before confirmation.",
+        "Allows users to submit the final application.",
+        "Provides application confirmation after successful submission.",
+        "Provides a simple and user-friendly interface for accessing placement cell services.",
+        "Uses responsive interface elements for better usability.",
         "Connects the user interface with the Flask backend for processing requests."
     ]
     for f in mod1_feats:
@@ -653,7 +689,7 @@ def generate_full_document():
     )
     add_subheading(doc, "Main Functions")
     add_bullet_point(doc, "Receives requests from the frontend.")
-    add_bullet_point(doc, "Processes company drive selection and filter requests.")
+    add_bullet_point(doc, "Processes placement drive selection requests.")
 
     doc.add_page_break()
 
@@ -661,15 +697,15 @@ def generate_full_document():
     # PAGE 12: MODULE 2 CONT., FIGURE 7.3 & MODULE 3
     # =========================================================================
     mod2_funcs = [
-        "Handles student job application processing.",
-        "Processes candidate submission payloads.",
-        "Generates and manages application tracking identifiers.",
-        "Communicates with the SQLite placement database.",
-        "Stores submitted applicant information.",
-        "Retrieves stored drive and applicant information.",
-        "Handles requests related to the TPO admin dashboard.",
+        "Handles candidate registration and profile processing.",
+        "Processes application submissions.",
+        "Generates and manages candidate tracking information.",
+        "Communicates with the SQLite database.",
+        "Stores submitted candidate information.",
+        "Retrieves stored applicant information.",
+        "Handles requests related to the admin dashboard.",
         "Connects the frontend interface with backend services.",
-        "Processes application routes and REST API endpoints.",
+        "Processes application routes and requests.",
         "Runs the Flask application inside the Docker container.",
         "Provides the backend services required by the Campus Placement application."
     ]
@@ -690,7 +726,7 @@ def generate_full_document():
         "persistent application data that can be accessed by the Flask backend."
     )
     add_subheading(doc, "Main Functions")
-    add_bullet_point(doc, "Stores placed candidate applications and company drives.")
+    add_bullet_point(doc, "Stores submitted student applications.")
 
     doc.add_page_break()
 
@@ -698,16 +734,16 @@ def generate_full_document():
     # PAGE 13: MODULE 3 CONT., FIGURE 7.4 & MODULE 4
     # =========================================================================
     mod3_funcs = [
-        "Maintains candidate records and screening statuses.",
-        "Stores placement drive information.",
+        "Maintains candidate records.",
+        "Stores drive-related information.",
         "Provides database access to the Flask backend.",
-        "Allows stored candidate submissions to be retrieved.",
+        "Allows stored applications to be retrieved.",
         "Makes stored applications available to the admin dashboard.",
         "Maintains the placement.db database file.",
         "Stores the database under the application data directory.",
         "Works with the Docker Volume for persistent storage.",
-        "Provides structured relational storage for applicant information.",
-        "Maintains application data even when the container is recreated, through the configured Docker Volume."
+        "Provides structured storage for applicant information.",
+        "Maintains applicant data even when the application container is recreated, through the configured Docker Volume."
     ]
     for f in mod3_funcs:
         add_bullet_point(doc, f)
@@ -741,7 +777,7 @@ def generate_full_document():
         "Allows Jenkins to retrieve the latest source code.",
         "Maintains the important project files in one repository.",
         "Supports integration between source control and the Jenkins pipeline.",
-        "Helps maintain different versions and feature branches of the project."
+        "Helps maintain different versions of the project."
     ]
     for f in mod4_funcs:
         add_bullet_point(doc, f)
@@ -753,9 +789,6 @@ def generate_full_document():
         "Jenkinsfile",
         "test_app.py",
         "requirements.txt",
-        "docker-compose.yml",
-        "docker-deploy.yml",
-        "inventory.ini",
         ".gitignore"
     ]
     for fn in files_list:
@@ -810,16 +843,16 @@ def generate_full_document():
         "Port Mapping:\n5001 → 5000\n\n"
         "The application can be accessed through:\nhttp://localhost:5001\n\n"
         "Technology: Docker.\n\n"
-        "Docker Flow:"
+        "Docker Flow"
     )
-    add_image_figure(doc, "screenshots/figures/fig_docker_flow.png", "Figure: Docker Flow - Campus Placement System", width=Inches(5.4))
+    add_image_figure(doc, "screenshots/figures/fig_docker_flow.png", "Figure: Docker Flow – Campus Placement System", width=Inches(5.4))
 
     doc.add_page_break()
 
     # =========================================================================
     # PAGE 17: FIGURES 7.6, 7.7 & MODULE 6
     # =========================================================================
-    add_image_figure(doc, "screenshots/figures/fig_7_6_docker_desktop.png", "Figure 7.6: Campus Placement Docker Image & Containers", width=Inches(5.4))
+    add_image_figure(doc, "screenshots/figures/fig_7_6_docker_desktop.png", "Figure 7.6: Campus Placement Docker Image", width=Inches(5.4))
     add_image_figure(doc, "screenshots/figures/fig_7_7_docker_ps.png", "Figure 7.7: Running Campus Placement Docker Container", width=Inches(5.4))
 
     add_heading_1(doc, "MODULE 6 — JENKINS CI/CD PIPELINE")
@@ -867,7 +900,7 @@ def generate_full_document():
         "Uses Pytest for automated testing.",
         "Maintains the test file test_app.py.",
         "Executes the test inside the Docker image.",
-        "Verifies the configured application tests.",
+        "Verifies the configured application test.",
         "Provides automated test execution.",
         "Prevents deployment from continuing when an earlier pipeline stage fails.",
         "Displays test results in Jenkins.",
@@ -883,7 +916,7 @@ def generate_full_document():
     add_subheading(doc, "Test Command")
     add_body_paragraph(doc, "python -m pytest test_app.py")
     add_subheading(doc, "Test Result")
-    add_body_paragraph(doc, "collected 6 items\ntest_app.py ...... [100%]\n6 passed")
+    add_body_paragraph(doc, "collected 1 item\ntest_app.py . [100%]\n1 passed")
 
     add_image_figure(doc, "screenshots/figures/fig_7_10_pytest.png", "Figure 7.10: Successful Automated Test Execution", width=Inches(5.4))
 
@@ -931,7 +964,7 @@ def generate_full_document():
     # =========================================================================
     # PAGE 21: FIGURE 7.11 & MODULE 9
     # =========================================================================
-    add_image_figure(doc, "screenshots/figures/fig_7_11_ansible.png", "Figure 7.11: Ansible Deployment Playbook & Execution", width=Inches(5.4))
+    add_image_figure(doc, "screenshots/figures/fig_7_11_ansible.png", "Figure 7.11: Ansible Deployment Playbook", width=Inches(5.4))
 
     add_heading_1(doc, "MODULE 9 — PERSISTENT STORAGE")
     add_body_paragraph(
@@ -947,7 +980,7 @@ def generate_full_document():
         "Stores the SQLite database in the mounted directory.",
         "Separates persistent data from the container lifecycle.",
         "Allows the database to remain available after container recreation.",
-        "Preserves stored applicant information.",
+        "Preserves stored order information.",
         "Provides persistent storage for the SQLite database."
     ]
     for f in mod9_funcs:
@@ -958,27 +991,27 @@ def generate_full_document():
     # =========================================================================
     # PAGE 22: STORAGE FLOW, FIGURE 7.12 & MODULE 10
     # =========================================================================
-    add_bullet_point(doc, "Allows the application container to be recreated without losing stored application data.")
+    add_bullet_point(doc, "Allows the application container to be recreated without losing stored order data.")
     add_subheading(doc, "Storage Configuration")
     add_body_paragraph(doc, "placement_data:/app/data\n\nStorage Flow")
 
-    add_image_figure(doc, "screenshots/figures/fig_storage_flow.png", "Figure: Storage Flow - Campus Placement System", width=Inches(5.4))
+    add_image_figure(doc, "screenshots/figures/fig_storage_flow.png", "Figure: Storage Flow – Campus Placement System", width=Inches(5.4))
     add_image_figure(doc, "screenshots/figures/fig_7_12_volume.png", "Figure 7.12: Placement Data Docker Volume", width=Inches(5.4))
 
     add_heading_1(doc, "MODULE 10 — ADMIN & PLACEMENT MANAGEMENT")
     add_body_paragraph(
         doc,
-        "This module provides access to the student applications submitted by users. The Flask backend stores the application "
-        "information in SQLite, while the admin dashboard provides access to the stored records."
+        "This module provides access to the applications submitted by users. The Flask backend stores the application information "
+        "in SQLite, while the admin dashboard provides access to the stored records."
     )
     add_subheading(doc, "Main Functions")
-    add_bullet_point(doc, "Receives job applications submitted by students.")
-    add_bullet_point(doc, "Processes applicant information through Flask.")
-    add_bullet_point(doc, "Stores application details in SQLite.")
-    add_bullet_point(doc, "Generates an application tracking ID.")
-    add_bullet_point(doc, "Makes stored applicant profiles available to the placement officer.")
-    add_bullet_point(doc, "Provides access to candidate records through the admin dashboard.")
-    add_bullet_point(doc, "Allows the administrator to view and shortlist candidates.")
+    add_bullet_point(doc, "Receives orders and applications placed by users.")
+    add_bullet_point(doc, "Processes application information through Flask.")
+    add_bullet_point(doc, "Stores application information in SQLite.")
+    add_bullet_point(doc, "Generates an application ID.")
+    add_bullet_point(doc, "Makes stored applications available to the administrator.")
+    add_bullet_point(doc, "Provides access to application information through the admin dashboard.")
+    add_bullet_point(doc, "Allows the administrator to view stored applications.")
 
     doc.add_page_break()
 
@@ -986,14 +1019,14 @@ def generate_full_document():
     # PAGE 23: APPLICATION FLOW, FIGURE 7.13 & MODULE 11
     # =========================================================================
     add_bullet_point(doc, "Connects the application workflow with database records.")
-    add_bullet_point(doc, "Provides a centralized view of submitted student applications.")
+    add_bullet_point(doc, "Provides a centralized view of placed applications.")
 
-    add_subheading(doc, "Application Flow")
-    add_image_figure(doc, "screenshots/figures/fig_order_flow.png", "Figure: Application Flow - Campus Placement System", width=Inches(5.4))
+    add_subheading(doc, "Order Flow – Campus Placement")
+    add_image_figure(doc, "screenshots/figures/fig_order_flow.png", "Figure: Application Flow – Campus Placement System", width=Inches(5.4))
 
     add_subheading(doc, "Admin Dashboard")
     add_body_paragraph(doc, "http://localhost:5001/admin")
-    add_image_figure(doc, "screenshots/figures/fig_7_13_admin.png", "Figure 7.13: TPO Placement Admin Dashboard", width=Inches(5.4))
+    add_image_figure(doc, "screenshots/figures/fig_7_13_admin.png", "Figure 7.13: Campus Placement Admin Dashboard", width=Inches(5.4))
 
     add_heading_1(doc, "MODULE 11 — CI/CD INTEGRATION")
     add_body_paragraph(
@@ -1038,10 +1071,10 @@ def generate_full_document():
         "Checking the running Docker container.",
         "Checking the application port.",
         "Opening the Campus Placement application.",
-        "Browsing available recruitment drives.",
-        "Submitting a verified student job application.",
-        "Checking the generated application tracking ID.",
-        "Checking the TPO admin dashboard.",
+        "Browsing available placement drives.",
+        "Placing a student job application.",
+        "Checking the generated application information.",
+        "Checking the admin dashboard.",
         "Checking stored SQLite applications."
     ]
     for v in ver_acts:
@@ -1057,7 +1090,7 @@ def generate_full_document():
         "Checking Ansible execution.",
         "Checking Jenkins pipeline results.",
         "Confirming successful application deployment.",
-        "Verifying that candidate data remains available after container recreation."
+        "Verifying that application data remains available after container recreation."
     ]
     for v in ver_cont:
         add_bullet_point(doc, v)
@@ -1066,7 +1099,7 @@ def generate_full_document():
     add_body_paragraph(
         doc,
         "Docker Build → SUCCESS\n"
-        "Pytest → 6 PASSED\n"
+        "Pytest → 1 PASSED\n"
         "Ansible → failed=0\n"
         "Pipeline → SUCCESS"
     )
@@ -1076,18 +1109,18 @@ def generate_full_document():
     doc.add_page_break()
 
     # =========================================================================
-    # PAGE 26: 19. RESULTS AND OUTPUT & COMMANDS USED
+    # PAGE 26: 19. RESULTS AND OUTPUT & COMMANDS USED (LEFT ALIGNED, NO GAPS)
     # =========================================================================
     add_heading_1(doc, "19. RESULTS AND OUTPUT")
-    add_body_paragraph(doc, "The implemented system successfully provides:")
+    add_cmd_label(doc, "The implemented system successfully provides:")
     res_list = [
-        "Digital placement drive browsing",
-        "Company and role search",
-        "Category-based selection (Product / Services)",
-        "Minimum CGPA cutoff verification",
-        "Student application registration",
-        "Application tracking ID generation",
-        "TPO admin screening dashboard",
+        "Digital placement browsing",
+        "Placement search",
+        "Category-based selection",
+        "Application registration",
+        "Job application placement",
+        "Application ID generation",
+        "Admin dashboard",
         "SQLite database storage",
         "Docker containerization",
         "Automated Pytest testing",
@@ -1100,166 +1133,163 @@ def generate_full_document():
 
     add_heading_1(doc, "COMMANDS USED")
     add_subheading(doc, "1. Docker Environment")
-    add_body_paragraph(doc, "Check running containers\ndocker ps\n\nCheck all containers\ndocker ps -a\n\nStart Ansible container\ndocker start ansible-docker-lab\n\nStart Jenkins\ndocker start jenkins")
+    add_cmd_label(doc, "Check running containers")
+    add_cmd_code(doc, "docker ps")
+    add_cmd_label(doc, "Check all containers")
+    add_cmd_code(doc, "docker ps -a")
+    add_cmd_label(doc, "Start Ansible container")
+    add_cmd_code(doc, "docker start ansible-docker-lab")
+    add_cmd_label(doc, "Start Jenkins")
+    add_cmd_code(doc, "docker start jenkins")
 
     add_subheading(doc, "2. Jenkins Commands")
 
     doc.add_page_break()
 
     # =========================================================================
-    # PAGE 27: COMMANDS CONT.
+    # PAGE 27: COMMANDS CONT. (LEFT ALIGNED, EXACT SPACING)
     # =========================================================================
-    add_body_paragraph(
-        doc,
-        "Fix Docker socket permission for Jenkins\n"
-        "docker exec -u root jenkins chmod 666 /var/run/docker.sock\n\n"
-        "Verify Jenkins can access Docker\n"
-        "docker exec jenkins docker info\n\n"
-        "Check Jenkins port\n"
-        "docker port jenkins\n\n"
-        "Jenkins was accessed using:\n"
-        "http://localhost:8080\n\n"
-        "3. Docker Image Build\n\n"
-        "Jenkins executes:\n"
-        "docker build -t placement-system-ci .\n\n"
-        "This creates the Docker image:\n"
-        "placement-system-ci\n\n"
-        "4. Automated Testing\n\n"
-        "Jenkins executes:\n"
-        "docker run --rm placement-system-ci python -m pytest test_app.py\n\n"
-        "Expected result:\n"
-        "6 passed\n\n"
-        "5. Ansible Deployment\n\n"
-        "Jenkins executes:\n"
-        "docker exec ansible-docker-lab ansible-playbook -i /inventory.ini /docker-deploy.yml\n\n"
-        "This runs the Ansible playbook.\n\n"
-        "Run Ansible manually"
-    )
+    add_cmd_label(doc, "Fix Docker socket permission for Jenkins")
+    add_cmd_code(doc, "docker exec -u root jenkins chmod 666 /var/run/docker.sock")
+    add_cmd_label(doc, "Verify Jenkins can access Docker")
+    add_cmd_code(doc, "docker exec jenkins docker info")
+    add_cmd_label(doc, "Check Jenkins port")
+    add_cmd_code(doc, "docker port jenkins")
+    add_cmd_label(doc, "Jenkins was accessed using:")
+    add_cmd_code(doc, "http://localhost:8080")
+
+    add_subheading(doc, "3. Docker Image Build")
+    add_cmd_label(doc, "Jenkins executes:")
+    add_cmd_code(doc, "docker build -t placement-system-ci .")
+    add_cmd_label(doc, "This creates the Docker image:")
+    add_cmd_code(doc, "placement-system-ci")
+
+    add_subheading(doc, "4. Automated Testing")
+    add_cmd_label(doc, "Jenkins executes:")
+    add_cmd_code(doc, "docker run --rm placement-system-ci python -m pytest test_app.py")
+    add_cmd_label(doc, "Expected result:")
+    add_cmd_code(doc, "1 passed")
+
+    add_subheading(doc, "5. Ansible Deployment")
+    add_cmd_label(doc, "Jenkins executes:")
+    add_cmd_code(doc, "docker exec ansible-docker-lab ansible-playbook -i /inventory.ini /docker-deploy.yml")
+    add_cmd_label(doc, "This runs the Ansible playbook.")
+    add_cmd_label(doc, "Run Ansible manually")
 
     doc.add_page_break()
 
     # =========================================================================
     # PAGE 28: COMMANDS CONT.
     # =========================================================================
-    add_body_paragraph(
-        doc,
-        "docker exec ansible-docker-lab ansible-playbook -i /inventory.ini /docker-deploy.yml\n\n"
-        "View Ansible playbook\n"
-        "docker exec ansible-docker-lab cat /docker-deploy.yml\n\n"
-        "6. Docker Container Verification\n\n"
-        "Check deployed container\n"
-        "docker ps\n\n"
-        "The Campus Placement container:\n"
-        "placement-system-ansible\n\n"
-        "Port mapping:\n"
-        "5001:5000\n\n"
-        "Application:\n"
-        "http://localhost:5001\n\n"
-        "7. Docker Volume Commands\n\n"
-        "List Docker volumes\n"
-        "docker volume ls\n\n"
-        "Our volume:\n"
-        "placement_data\n\n"
-        "Inspect the volume\n"
-        "docker volume inspect placement_data\n\n"
-        "8. SQLite Database Commands\n\n"
-        "Display stored applications\n"
-        "docker exec placement-system-ansible python -c \"import sqlite3; c=sqlite3.connect('/app/data/placement.db'); "
-        "[print(row) for row in c.execute('SELECT * FROM applications')]; c.close()\"\n\n"
-        "Display database tables"
-    )
+    add_cmd_code(doc, "docker exec ansible-docker-lab ansible-playbook -i /inventory.ini /docker-deploy.yml")
+    add_cmd_label(doc, "View Ansible playbook")
+    add_cmd_code(doc, "docker exec ansible-docker-lab cat /docker-deploy.yml")
+
+    add_subheading(doc, "6. Docker Container Verification")
+    add_cmd_label(doc, "Check deployed container")
+    add_cmd_code(doc, "docker ps")
+    add_cmd_label(doc, "The Campus Placement container:")
+    add_cmd_code(doc, "placement-system-ansible")
+    add_cmd_label(doc, "Port mapping:")
+    add_cmd_code(doc, "5001:5000")
+    add_cmd_label(doc, "Application:")
+    add_cmd_code(doc, "http://localhost:5001")
+
+    add_subheading(doc, "7. Docker Volume Commands")
+    add_cmd_label(doc, "List Docker volumes")
+    add_cmd_code(doc, "docker volume ls")
+    add_cmd_label(doc, "Our volume:")
+    add_cmd_code(doc, "placement_data")
+    add_cmd_label(doc, "Inspect the volume")
+    add_cmd_code(doc, "docker volume inspect placement_data")
+
+    add_subheading(doc, "8. SQLite Database Commands")
+    add_cmd_label(doc, "Display stored applications")
+    add_cmd_code(doc, "docker exec placement-system-ansible python -c \"import sqlite3; c=sqlite3.connect('data/placement.db'); [print(row) for row in c.execute('SELECT * FROM applications')]; c.close()\"")
+    add_cmd_label(doc, "Display database tables")
 
     doc.add_page_break()
 
     # =========================================================================
     # PAGE 29: COMMANDS CONT.
     # =========================================================================
-    add_body_paragraph(
-        doc,
-        "docker exec placement-system-ansible python -c \"import sqlite3; c=sqlite3.connect('/app/data/placement.db'); "
-        "print(c.execute(\\\"SELECT name FROM sqlite_master WHERE type='table'\\\").fetchall()); c.close()\"\n\n"
-        "Display all applications as a list\n"
-        "docker exec placement-system-ansible python -c \"import sqlite3; c=sqlite3.connect('/app/data/placement.db'); "
-        "print(c.execute('SELECT * FROM applications').fetchall()); c.close()\"\n\n"
-        "9. Docker Volume + Database Verification\n\n"
-        "To verify that the database exists inside the running container:\n"
-        "docker exec placement-system-ansible python -c \"import sqlite3; c=sqlite3.connect('/app/data/placement.db'); "
-        "print(c.execute('SELECT * FROM applications').fetchall()); c.close()\"\n\n"
-        "The database location is:\n"
-        "data/placement.db\n\n"
-        "and inside the container:\n"
-        "/app/data/placement.db\n\n"
-        "10. Git Commands Used\n\n"
-        "Initialize Git\n"
-        "git init\n\n"
-        "Check status\n"
-        "git status\n\n"
-        "Add files\n"
-        "git add .\n\n"
-        "Commit changes\n"
-        "git commit -m \"Finalize Campus Placement CI/CD project\"\n\n"
-        "Check branches\n"
-        "git branch\n\n"
-        "Connect GitHub repository"
-    )
+    add_cmd_code(doc, "docker exec placement-system-ansible python -c \"import sqlite3; c=sqlite3.connect('data/placement.db'); print(c.execute(\\\"SELECT name FROM sqlite_master WHERE type='table'\\\").fetchall()); c.close()\"")
+    add_cmd_label(doc, "Display all applications as a list")
+    add_cmd_code(doc, "docker exec placement-system-ansible python -c \"import sqlite3; c=sqlite3.connect('data/placement.db'); print(c.execute('SELECT * FROM applications').fetchall()); c.close()\"")
+
+    add_subheading(doc, "9. Docker Volume + Database Verification")
+    add_cmd_label(doc, "To verify that the database exists inside the running container:")
+    add_cmd_code(doc, "docker exec placement-system-ansible python -c \"import sqlite3; c=sqlite3.connect('data/placement.db'); print(c.execute('SELECT * FROM applications').fetchall()); c.close()\"")
+    add_cmd_label(doc, "The database location is:")
+    add_cmd_code(doc, "data/placement.db")
+    add_cmd_label(doc, "and inside the container:")
+    add_cmd_code(doc, "/app/data/placement.db")
+
+    add_subheading(doc, "10. Git Commands Used")
+    add_cmd_label(doc, "Initialize Git")
+    add_cmd_code(doc, "git init")
+    add_cmd_label(doc, "Check status")
+    add_cmd_code(doc, "git status")
+    add_cmd_label(doc, "Add files")
+    add_cmd_code(doc, "git add .")
+    add_cmd_label(doc, "Commit changes")
+    add_cmd_code(doc, "git commit -m \"Finalize Campus Placement CI/CD project\"")
+    add_cmd_label(doc, "Check branches")
+    add_cmd_code(doc, "git branch")
+    add_cmd_label(doc, "Connect GitHub repository")
 
     doc.add_page_break()
 
     # =========================================================================
     # PAGE 30: COMMANDS CONT.
     # =========================================================================
-    add_body_paragraph(
-        doc,
-        "git remote add origin https://github.com/ishuvspathak/CampusPlacementManagementSystem.git\n\n"
-        "Push to GitHub\n"
-        "git push -u origin main\n\n"
-        "Pull latest code\n"
-        "git pull origin main\n\n"
-        "11. Useful Docker Commands Used During Implementation\n\n"
-        "List Docker images\n"
-        "docker images\n\n"
-        "Stop container\n"
-        "docker stop placement-system-ansible\n\n"
-        "Start container\n"
-        "docker start placement-system-ansible\n\n"
-        "View container logs\n"
-        "docker logs placement-system-ansible\n\n"
-        "Execute a command inside the container\n"
-        "docker exec placement-system-ansible ...\n\n"
-        "12. Main Commands for Your Report\n\n"
-        "If your report doesn't need every troubleshooting command, these are the most important ones to include:\n\n"
-        "docker build -t placement-system-ci .\n"
-        "docker run --rm placement-system-ci python -m pytest test_app.py\n"
-        "docker exec ansible-docker-lab ansible-playbook -i /inventory.ini /docker-deploy.yml\n"
-        "docker ps\n"
-        "docker volume ls\n"
-        "docker volume inspect placement_data\n"
-        "docker exec placement-system-ansible python -c \"import sqlite3; c=sqlite3.connect('/app/data/placement.db'); "
-        "print(c.execute('SELECT * FROM applications').fetchall()); c.close()\""
-    )
+    add_cmd_code(doc, "git remote add origin https://github.com/ishuvspathak/CampusPlacementManagementSystem.git")
+    add_cmd_label(doc, "Push to GitHub")
+    add_cmd_code(doc, "git push -u origin main")
+    add_cmd_label(doc, "Pull latest code")
+    add_cmd_code(doc, "git pull origin main")
+
+    add_subheading(doc, "11. Useful Docker Commands Used During Implementation")
+    add_cmd_label(doc, "List Docker images")
+    add_cmd_code(doc, "docker images")
+    add_cmd_label(doc, "Stop container")
+    add_cmd_code(doc, "docker stop placement-system-ansible")
+    add_cmd_label(doc, "Start container")
+    add_cmd_code(doc, "docker start placement-system-ansible")
+    add_cmd_label(doc, "View container logs")
+    add_cmd_code(doc, "docker logs placement-system-ansible")
+    add_cmd_label(doc, "Execute a command inside the container")
+    add_cmd_code(doc, "docker exec placement-system-ansible ...")
+
+    add_subheading(doc, "12. Main Commands for Your Report")
+    add_cmd_label(doc, "If your report doesn't need every troubleshooting command, these are the most important ones to include:")
+    add_cmd_code(doc, "docker build -t placement-system-ci .")
+    add_cmd_code(doc, "docker run --rm placement-system-ci python -m pytest test_app.py")
+    add_cmd_code(doc, "docker exec ansible-docker-lab ansible-playbook -i /inventory.ini /docker-deploy.yml")
+    add_cmd_code(doc, "docker ps")
+    add_cmd_code(doc, "docker volume ls")
+    add_cmd_code(doc, "docker volume inspect placement_data")
+    add_cmd_code(doc, "docker exec placement-system-ansible python -c \"import sqlite3; c=sqlite3.connect('data/placement.db'); print(c.execute('SELECT * FROM applications').fetchall()); c.close()\"")
 
     doc.add_page_break()
 
     # =========================================================================
     # PAGE 31: ADVANTAGES & LIMITATIONS
     # =========================================================================
-    add_body_paragraph(
-        doc,
-        "And the Git commands:\n\n"
-        "git add .\n"
-        "git commit -m \"Finalize Campus Placement CI/CD project\"\n"
-        "git push -u origin main"
-    )
+    add_cmd_label(doc, "And the Git commands:")
+    add_cmd_code(doc, "git add .")
+    add_cmd_code(doc, "git commit -m \"Finalize Campus Placement CI/CD project\"")
+    add_cmd_code(doc, "git push -u origin main")
 
     add_heading_1(doc, "21. ADVANTAGES")
     advs = [
-        "Reduces manual placement drive coordination effort.",
-        "Provides a user-friendly recruitment portal for students.",
+        "Reduces manual placement coordination effort.",
+        "Provides a user-friendly placement portal interface.",
         "Provides centralized placement application information.",
-        "Automates application testing with Pytest.",
+        "Automates application testing.",
         "Reduces manual deployment effort.",
         "Provides consistent application execution through Docker.",
-        "Provides persistent database storage using Docker Volume.",
+        "Provides persistent database storage.",
         "Integrates source control with CI/CD.",
         "Demonstrates automated deployment using Ansible."
     ]
@@ -1269,8 +1299,8 @@ def generate_full_document():
     add_heading_1(doc, "22. LIMITATIONS")
     lims = [
         "The current system uses SQLite for database storage.",
-        "Online test or assessment integration is not currently included.",
-        "User authentication and institutional SSO are not currently included.",
+        "Online test and assessment functionality is not implemented.",
+        "User authentication is not currently included.",
         "Real-time interview slot booking is not implemented.",
         "The deployment is demonstrated in a local Docker environment.",
         "Monitoring and centralized logging are not implemented."
@@ -1286,49 +1316,49 @@ def generate_full_document():
     add_heading_1(doc, "23. CONCLUSION")
     add_body_paragraph(
         doc,
-        "The Campus Placement Management System successfully demonstrates the integration of a web-based recruitment "
-        "portal with modern DevOps practices to provide an efficient and automated application environment. The system enables "
-        "students to browse available recruitment drives, search for roles, filter by cutoffs, and submit applications through a "
-        "simple and user-friendly interface. The admin dashboard provides a centralized platform for viewing and managing "
-        "candidate applications placed by users. Flask is used to handle the backend operations, while SQLite is used to store "
-        "placement information in the placement.db database. The project also demonstrates the complete implementation of a "
-        "Continuous Integration and Continuous Deployment (CI/CD) workflow. Git and GitHub are used for version control and source "
-        "code management, allowing the project files to be maintained in a centralized repository. Jenkins automates the CI/CD "
-        "pipeline by retrieving the latest source code, building the Docker image, executing automated tests, and initiating the "
-        "deployment process. Pytest is integrated into the pipeline to verify the application before deployment, helping ensure "
-        "that the application passes the defined automated tests. Docker provides containerization for the Campus Placement "
-        "application, allowing the Flask application and its required dependencies to run in a consistent environment. Ansible is "
-        "used to automate the deployment and configuration of the Docker container through an Ansible playbook. The playbook defines "
-        "important deployment configurations such as the container name, Docker image, port mapping, and volume mounting. A Docker "
-        "Volume, placement_data, is used to provide persistent storage for the SQLite database. The volume is mounted to /app/data, "
-        "ensuring that applicant records remain available even when the application container is recreated or updated. Overall, the "
-        "project demonstrates how application development, version control, automated testing, containerization, deployment automation, "
-        "and persistent storage can be integrated into a single DevOps workflow. The successful execution of the pipeline confirms the "
-        "practical implementation of GitHub → Jenkins → Docker → Pytest → Ansible → Flask → SQLite, providing a complete automated "
-        "approach to deploying and maintaining the Campus Placement Management System."
+        "The Campus Placement Management System successfully demonstrates the integration of a web-based placement "
+        "system with modern DevOps practices to provide an efficient and automated application environment. The system enables "
+        "students to browse available company drives, search for roles, select positions based on eligibility, and submit applications "
+        "through a simple and user-friendly interface. The admin dashboard provides a centralized platform for viewing and managing "
+        "the applications submitted by users. Flask is used to handle the backend operations, while SQLite is used to store placement "
+        "information in the placement.db database. The project also demonstrates the complete implementation of a Continuous "
+        "Integration and Continuous Deployment (CI/CD) workflow. Git and GitHub are used for version control and source code management, "
+        "allowing the project files to be maintained in a centralized repository. Jenkins automates the CI/CD pipeline by retrieving "
+        "the latest source code, building the Docker image, executing automated tests, and initiating the deployment process. Pytest "
+        "is integrated into the pipeline to verify the application before deployment, helping ensure that the application passes the "
+        "defined automated tests. Docker provides containerization for the Campus Placement application, allowing the Flask application "
+        "and its required dependencies to run in a consistent environment. Ansible is used to automate the deployment and configuration "
+        "of the Docker container through an Ansible playbook. The playbook defines important deployment configurations such as the "
+        "container name, Docker image, port mapping, and volume mounting. A Docker Volume, placement_data, is used to provide persistent "
+        "storage for the SQLite database. The volume is mounted to /app/data, ensuring that application information remains available "
+        "even when the application container is recreated or updated. Overall, the project demonstrates how application development, "
+        "version control, automated testing, containerization, deployment automation, and persistent storage can be integrated into "
+        "a single DevOps workflow. The successful execution of the pipeline confirms the practical implementation of GitHub → "
+        "Jenkins → Docker → Pytest → Ansible → Flask → SQLite, providing a complete automated approach to deploying and maintaining "
+        "the Campus Placement Management System."
     )
 
     add_heading_1(doc, "24. FUTURE ENHANCEMENTS")
-    add_body_paragraph(doc, "The system can be extended with:")
+    add_cmd_label(doc, "The system can be extended with:")
     futs = [
-        "1. Online assessment & coding round integration.",
-        "2. Student Single Sign-On (SSO) authentication.",
-        "3. Real-time application tracking and interview scheduling.",
-        "4. Automated email & SMS shortlist notifications.",
-        "5. Resume parsing & AI keyword matching.",
-        "6. Multi-college and department support.",
-        "7. Cloud deployment on AWS / GCP.",
-        "8. PostgreSQL or MySQL database integration.",
+        "1. Online assessment and test integration.",
+        "2. Student authentication.",
+        "3. Real-time application tracking.",
+        "4. Interview status notifications.",
+        "5. Drive eligibility management.",
+        "6. Multiple department and college support.",
+        "7. Cloud deployment.",
+        "8. PostgreSQL or MySQL integration.",
         "9. GitHub webhook-based automatic triggering.",
-        "10. Application monitoring with Prometheus and Grafana logging."
+        "10. Application monitoring and centralized logging."
     ]
     for f in futs:
-        add_body_paragraph(doc, f)
+        add_numbered_item(doc, f)
 
-    # Save final document
-    out_path = "Campus_Placement_Management_System_DevOps_Report_Final.docx"
-    doc.save(out_path)
-    print(f"Full 32-page Word document successfully generated with all screenshots and exact formatting at {out_path}!")
+    # Save to a fresh, clean filename
+    out_file = "Campus_Placement_Management_System_DevOps_Report_v2.docx"
+    doc.save(out_file)
+    print(f"Successfully generated clean, perfectly spaced report at {out_file}!")
 
 if __name__ == '__main__':
     generate_full_document()
