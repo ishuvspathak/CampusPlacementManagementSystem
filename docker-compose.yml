@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  placement-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: placement-system-ci
+    container_name: placement-system-ansible
+    restart: unless-stopped
+    ports:
+      - "5001:5000"
+    volumes:
+      - placement_data:/app/data
+    environment:
+      - DATA_DIR=/app/data
+      - PORT=5000
+
+volumes:
+  placement_data:
+    name: placement_data
