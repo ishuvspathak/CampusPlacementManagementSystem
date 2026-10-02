@@ -140,6 +140,16 @@ def apply_job():
         conn.close()
         return jsonify({'success': False, 'message': 'Placement drive not found'}), 404
         
+    # Enforce minimum eligibility CGPA cutoff
+    if cgpa < drive['eligibility_cgpa']:
+        conn.close()
+        if request.is_json:
+            return jsonify({
+                'success': False,
+                'message': f'Your CGPA ({cgpa}) does not meet the minimum eligibility requirement of {drive["eligibility_cgpa"]} for {drive["company"]}.'
+            }), 400
+        return redirect(url_for('home', error='cgpa_cutoff', min_cgpa=drive['eligibility_cgpa']))
+        
     cursor = conn.cursor()
     cursor.execute('''
         INSERT INTO applications (drive_id, company, role, student_name, roll_no, department, cgpa, email, phone, status)

@@ -532,9 +532,14 @@
                     </div>
                     <div class="form-group">
                         <label>Current CGPA</label>
-                        <input type="number" step="0.01" name="cgpa" value="8.9" required>
+                        <input type="number" step="0.01" name="cgpa" id="studentCgpa" value="8.9" required>
                     </div>
                 </div>
+
+                <!-- Instant CGPA Cutoff Validation Alert -->
+                <div id="cgpaCutoffAlert" style="display: none; background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; padding: 12px 14px; border-radius: 8px; margin: 10px 0; font-size: 0.9rem; font-weight: 600;">
+                </div>
+
                 <div class="form-group">
                     <label>Department</label>
                     <input type="text" name="department" value="Information Technology" required>
@@ -549,7 +554,7 @@
                         <input type="tel" name="phone" value="+91 9876543210" required>
                     </div>
                 </div>
-                <button type="submit" class="btn-apply" style="margin-top: 10px; padding: 12px; font-size: 1rem;">Confirm & Submit Application</button>
+                <button type="submit" id="submitAppBtn" class="btn-apply" style="margin-top: 10px; padding: 12px; font-size: 1rem;">Confirm & Submit Application</button>
             </form>
         </div>
     </div>
@@ -564,10 +569,17 @@
     </footer>
 
     <script>
+        let currentMinCgpa = 0;
+        let currentCompany = '';
+
         function openApplyModal(driveId, company, role, minCgpa) {
+            currentMinCgpa = parseFloat(minCgpa);
+            currentCompany = company;
             document.getElementById('modalDriveId').value = driveId;
             document.getElementById('modalCompany').innerText = company;
             document.getElementById('modalRole').innerText = role + ' (Min CGPA: ' + minCgpa + ')';
+            
+            checkCgpaCutoff();
             document.getElementById('applyModal').classList.add('active');
         }
 
@@ -575,17 +587,59 @@
             document.getElementById('applyModal').classList.remove('active');
         }
 
+        function checkCgpaCutoff() {
+            const cgpaInput = document.getElementById('studentCgpa');
+            const alertBox = document.getElementById('cgpaCutoffAlert');
+            const submitBtn = document.getElementById('submitAppBtn');
+            const enteredCgpa = parseFloat(cgpaInput.value);
+
+            if (!isNaN(enteredCgpa) && enteredCgpa < currentMinCgpa) {
+                alertBox.innerHTML = `❌ <strong>Your CGPA does not meet requirements!</strong><br><span style="font-weight: 400; font-size: 0.85rem;">Your CGPA is <strong>${enteredCgpa.toFixed(2)}</strong>, but <strong>${currentCompany}</strong> requires a minimum cutoff of <strong>${currentMinCgpa.toFixed(1)}</strong>.</span>`;
+                alertBox.style.display = 'block';
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.45';
+                submitBtn.style.cursor = 'not-allowed';
+                return false;
+            } else {
+                alertBox.style.display = 'none';
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                submitBtn.style.cursor = 'pointer';
+                return true;
+            }
+        }
+
+        // Live check as the user types their CGPA
+        document.getElementById('studentCgpa').addEventListener('input', checkCgpaCutoff);
+
+        // Block submit if below cutoff
+        document.getElementById('applicationForm').addEventListener('submit', function(e) {
+            if (!checkCgpaCutoff()) {
+                e.preventDefault();
+                alert('Your CGPA does not meet the eligibility requirements for this placement drive.');
+                return false;
+            }
+        });
+
         // Close on escape
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeApplyModal();
         });
 
-        // Check URL for applied success param
+        // Check URL for applied success or cutoff error param
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('applied') === 'success') {
             const toast = document.getElementById('toastMsg');
+            toast.innerText = 'Application submitted successfully! Tracking ID generated.';
+            toast.style.background = '#10b981';
             toast.style.display = 'block';
             setTimeout(() => { toast.style.display = 'none'; }, 4000);
+        } else if (urlParams.get('error') === 'cgpa_cutoff') {
+            const toast = document.getElementById('toastMsg');
+            toast.innerText = 'Application rejected: Your CGPA does not meet the eligibility requirements.';
+            toast.style.background = '#ef4444';
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 5000);
         }
     </script>
 </body>
