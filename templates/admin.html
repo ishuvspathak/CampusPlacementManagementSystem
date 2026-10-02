@@ -274,9 +274,16 @@
 
         <!-- Student Applications Table -->
         <div class="card">
-            <div class="card-header">
-                <h2>Registered Student Applications & Screening</h2>
-                <span style="font-size: 0.85rem; color: var(--text-muted);">Live database records (/app/data/placement.db)</span>
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <div>
+                    <h2>Registered Student Applications & Screening</h2>
+                    <span style="font-size: 0.85rem; color: var(--text-muted);">Live database records (/app/data/placement.db)</span>
+                </div>
+                <div>
+                    <button onclick="resetDemoRecords()" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; padding: 7px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                        🧹 Reset & Clean All Test Records
+                    </button>
+                </div>
             </div>
 
             <table>
@@ -294,7 +301,7 @@
                 </thead>
                 <tbody>
                     {% for app in applications %}
-                    <tr>
+                    <tr id="app-row-{{ app['id'] }}">
                         <td><strong>#{{ app['id'] }}</strong></td>
                         <td style="font-weight: 600;">{{ app['student_name'] }}</td>
                         <td style="font-family: monospace; color: #93c5fd;">{{ app['roll_no'] }}</td>
@@ -313,14 +320,19 @@
                             </span>
                         </td>
                         <td>
-                            <select class="select-status" onchange="changeStatus('{{ app['id'] }}', this.value)">
-                                <option value="" disabled selected>Change Status</option>
-                                <option value="Applied">Applied</option>
-                                <option value="Shortlisted">Shortlisted</option>
-                                <option value="Interview Scheduled">Interview Scheduled</option>
-                                <option value="Selected">Selected</option>
-                                <option value="Rejected">Rejected</option>
-                            </select>
+                            <div style="display: flex; gap: 6px; align-items: center;">
+                                <select class="select-status" onchange="changeStatus('{{ app['id'] }}', this.value)">
+                                    <option value="" disabled selected>Change Status</option>
+                                    <option value="Applied">Applied</option>
+                                    <option value="Shortlisted">Shortlisted</option>
+                                    <option value="Interview Scheduled">Interview Scheduled</option>
+                                    <option value="Selected">Selected</option>
+                                    <option value="Rejected">Rejected</option>
+                                </select>
+                                <button onclick="deleteApplication('{{ app['id'] }}', '{{ app['student_name'] }}', '{{ app['company'] }}')" style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #f87171; padding: 6px 10px; border-radius: 6px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s;" title="Delete this application">
+                                    🗑️
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
@@ -347,6 +359,48 @@
                     location.reload();
                 } else {
                     alert('Error updating status: ' + res.message);
+                }
+            } catch (err) {
+                alert('Request failed: ' + err);
+            }
+        }
+
+        async function deleteApplication(appId, studentName, company) {
+            if (!confirm(`Are you sure you want to delete application #${appId} for ${studentName} (${company})?`)) {
+                return;
+            }
+            try {
+                const response = await fetch(`/api/application/${appId}`, {
+                    method: 'DELETE'
+                });
+                const res = await response.json();
+                if (res.success) {
+                    const row = document.getElementById(`app-row-${appId}`);
+                    if (row) {
+                        row.remove();
+                    }
+                    location.reload();
+                } else {
+                    alert('Error deleting application: ' + res.message);
+                }
+            } catch (err) {
+                alert('Request failed: ' + err);
+            }
+        }
+
+        async function resetDemoRecords() {
+            if (!confirm('This will clean all test applications and reset the database to 1 clean official demonstration record (Ishu Pathak). Do you want to proceed?')) {
+                return;
+            }
+            try {
+                const response = await fetch('/api/applications/reset', {
+                    method: 'POST'
+                });
+                const res = await response.json();
+                if (res.success) {
+                    location.reload();
+                } else {
+                    alert('Error resetting records: ' + res.message);
                 }
             } catch (err) {
                 alert('Request failed: ' + err);

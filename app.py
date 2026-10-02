@@ -149,6 +149,20 @@ def apply_job():
                 'message': f'Your CGPA ({cgpa}) does not meet the minimum eligibility requirement of {drive["eligibility_cgpa"]} for {drive["company"]}.'
             }), 400
         return redirect(url_for('home', error='cgpa_cutoff', min_cgpa=drive['eligibility_cgpa']))
+
+    # Prevent duplicate applications: one application per student per company
+    existing_app = conn.execute(
+        'SELECT id FROM applications WHERE drive_id = ? AND (roll_no = ? OR email = ?)',
+        (drive_id, roll_no, email)
+    ).fetchone()
+    if existing_app:
+        conn.close()
+        if request.is_json:
+            return jsonify({
+                'success': False,
+                'message': f'Student with Roll Number {roll_no} has already registered for {drive["company"]}. Duplicate registrations are not permitted.'
+            }), 400
+        return redirect(url_for('home', error='already_registered', company=drive['company'], roll_no=roll_no))
         
     cursor = conn.cursor()
     cursor.execute('''
@@ -163,6 +177,33 @@ def apply_job():
     if request.is_json:
         return jsonify({'success': True, 'application_id': app_id, 'message': 'Application submitted successfully'}), 201
     return redirect(url_for('home', applied='success', app_id=app_id))
+
+@app.route('/api/application/<int:app_id>', methods=['DELETE', 'POST'])
+def delete_application(app_id):
+    """Delete an individual student application record."""
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM applications WHERE id = ?', (app_id,))
+    deleted = cursor.rowcount > 0
+    conn.commit()
+    conn.close()
+    if deleted:
+        return jsonify({'success': True, 'message': f'Application #{app_id} deleted successfully'}), 200
+    return jsonify({'success': False, 'message': 'Application not found'}), 404
+
+@app.route('/api/applications/reset', methods=['POST'])
+def reset_applications():
+    """Reset applications database to clean official demonstration state."""
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM applications')
+    cursor.execute('''
+        INSERT INTO applications (drive_id, company, role, student_name, roll_no, department, cgpa, email, phone, status)
+        VALUES (1, 'Google Cloud', 'Cloud Solutions Architect', 'Ishu Pathak', '2303717620521021', 'Information Technology', 8.9, 'ishupathak@cit.edu.in', '+91 9876543210', 'Shortlisted')
+    ''')
+    conn.commit()
+    conn.close()
+    return jsonify({'success': True, 'message': 'Applications successfully reset to official record'}), 200
 
 @app.route('/admin')
 def admin():

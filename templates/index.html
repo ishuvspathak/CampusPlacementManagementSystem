@@ -640,6 +640,16 @@
             toast.style.background = '#ef4444';
             toast.style.display = 'block';
             setTimeout(() => { toast.style.display = 'none'; }, 5000);
+        } else if (urlParams.get('error') === 'already_registered') {
+            const toast = document.getElementById('toastMsg');
+            const comp = urlParams.get('company') || 'this company';
+            const rno = urlParams.get('roll_no') || '';
+            toast.innerHTML = `⚠️ <strong>Duplicate Registration Blocked:</strong> Student with Roll No <strong>${rno}</strong> has already applied for <strong>${comp}</strong>!`;
+            toast.style.background = '#f59e0b';
+            toast.style.color = '#111827';
+            toast.style.fontWeight = '600';
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 6000);
         }
     </script>
 </body>
