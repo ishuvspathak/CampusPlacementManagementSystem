@@ -36,8 +36,8 @@ def test_admin_dashboard_rendering(client):
     response = client.get('/admin')
     assert response.status_code == 200
     assert b'Training &amp; Placement Officer Portal' in response.data or b'Placement Officer' in response.data
-    assert b'Dr. M. Sangeetha' in response.data
-    assert b'Dr. E. Arul' in response.data
+    assert b'Ishu Pathak' in response.data
+    assert b'Information Technology' in response.data
 
 def test_get_jobs_api(client):
     """Test REST API returning active placement drives."""
